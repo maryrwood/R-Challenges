@@ -1,0 +1,15 @@
+# R-Challenges
+---
+title: "challenge 1"
+output: html_notebook
+---
+
+```{r}
+library(readr) 
+datafile <- read.csv('week9_comic_characters.csv')
+
+```
+```{r}
+datafile %>% count(sex, sort = TRUE)
+
+```
