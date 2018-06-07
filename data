@@ -5,11 +5,10 @@ output: html_notebook
 ---
 
 ```{r}
-library(readr) 
-datafile <- read.csv('week9_comic_characters.csv')
+library('dplyr')
+library(data.table)
+datafile <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/week9_comic_characters.csv')
 
-```
-```{r}
-datafile %>% count(sex, sort = TRUE)
+count(datafile, sex, sort = TRUE)
 
 ```
