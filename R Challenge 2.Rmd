@@ -16,8 +16,7 @@ library(data.table)
 library(effsize)
 library(reshape2)
 datafile <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/week9_comic_characters.csv')
-
-count(datafile, sex, sort = TRUE)
+##count(datafile, sex, sort = TRUE)
 
 ```
 ```{r} 
@@ -29,9 +28,7 @@ datafile %>>%
   (~ totalDC)
 totalDC[1,2] %>>%
   (~ totalDC)
-totalDC
 ```
-
 
 ```{r}
 ##Total number of marvel characters
@@ -43,8 +40,7 @@ datafile %>>%
 totalMarvel[1,2] %>>%
   (~totalMarvel)  
 
-  
-##getting the number of female characters by publisher= DC
+  ##getting the number of female characters by publisher= DC
 datafile %>>%
   select(publisher, sex) %>>%
   filter(str_detect(sex, "Female Character")) %>>%
@@ -53,7 +49,6 @@ datafile %>>%
   (~DCFEM)
 DCFEM[1,2] %>>%
   (~DCFEM)
-DCFEM
 
 ##getting the number of female characters by publisher= DC
 datafile %>>%
@@ -65,14 +60,12 @@ datafile %>>%
 
 MarvelFEM[1,2] %>>%
 (~MarvelFEM)
-MarvelFEM
 
 ##math
 totalDC <- as.numeric(totalDC)
 DCFEM <- as.numeric(DCFEM)
 MarvelFEM <- as.numeric(MarvelFEM)
 totalMarvel <- as.numeric(totalMarvel)
-
 
 DC <- DCFEM / totalDC
 Marvel <- MarvelFEM / totalMarvel
@@ -88,8 +81,6 @@ MString2 <- "characters are female"
 MString
 Marvel
 MString2
-
-
 ```
 
 ```{r}
@@ -103,17 +94,8 @@ varianceDC <- 1/(totalDC-1)
 
 stdpooled <- sqrt((((totalDC-1)*(varianceDC^2))+((totalMarvel-1)*(varianceMarvel^2)))/(totalDC+totalMarvel-2))
 cohen <- (DC-Marvel)/stdpooled
-cohen
-sd(totalMarvel)
-  
-              
-    
-
-
-
-##cohen.d(, DC, Marvel, alpha =.05, std = TRUE)
+cohen ##here's where effect size is supposed to be
 ```
-
 
 ```{r}
 ##barchart Marvel
@@ -124,8 +106,8 @@ datafile %>>%
     (~ amarveltable)
 colnames(amarveltable)[2] <- "number"
   TABLE <- data.frame(c(amarveltable))
-   e <- ggplot(data = TABLE, aes(x=sex, y=number)) +geom_bar(stat = "identity")
-  e 
+   a <- ggplot(data = TABLE, aes(x=sex, y=number)) +geom_bar(stat = "identity")
+  a 
   
 ##barchartDC
 datafile %>>%
@@ -135,13 +117,6 @@ datafile %>>%
     (~ aDCtable)
 colnames(aDCtable)[2] <- "number"
   TABLE2 <- data.frame(c(aDCtable))
-   e <- ggplot(data = TABLE2, aes(x=sex, y=number)) +geom_bar(stat = "identity")
-  e 
+   b <- ggplot(data = TABLE2, aes(x=sex, y=number)) +geom_bar(stat = "identity")
+  b 
 ```
-
-
-
-
-
-
-
