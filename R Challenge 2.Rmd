@@ -1,0 +1,147 @@
+# R-Challenges
+---
+title: "challenge 1"
+output: html_notebook
+---
+
+```{r}
+##install.packages("tidyverse")
+```
+
+```{r}
+library(pipeR)
+library(tidyverse)
+library('dplyr')
+library(data.table)
+library(effsize)
+library(reshape2)
+datafile <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/week9_comic_characters.csv')
+
+count(datafile, sex, sort = TRUE)
+
+```
+```{r} 
+## total number of DC characters
+datafile %>>%
+  select(publisher) %>>%
+  filter(str_detect(publisher, "DC")) %>>%
+  count(publisher)%>>%
+  (~ totalDC)
+totalDC[1,2] %>>%
+  (~ totalDC)
+totalDC
+```
+
+
+```{r}
+##Total number of marvel characters
+datafile %>>%
+  select(publisher) %>>%
+  filter(str_detect(publisher, "Marvel")) %>>%
+  count(publisher) %>>%
+  (~totalMarvel)
+totalMarvel[1,2] %>>%
+  (~totalMarvel)  
+
+  
+##getting the number of female characters by publisher= DC
+datafile %>>%
+  select(publisher, sex) %>>%
+  filter(str_detect(sex, "Female Character")) %>>%
+  filter(str_detect(publisher, "DC")) %>>%
+  count(sex) %>>%
+  (~DCFEM)
+DCFEM[1,2] %>>%
+  (~DCFEM)
+DCFEM
+
+##getting the number of female characters by publisher= DC
+datafile %>>%
+  select(publisher, sex) %>>%
+  filter(str_detect(sex, "Female Character")) %>>%
+  filter(str_detect(publisher, "Marvel")) %>>%
+  count(sex) %>>%
+  (~MarvelFEM)
+
+MarvelFEM[1,2] %>>%
+(~MarvelFEM)
+MarvelFEM
+
+##math
+totalDC <- as.numeric(totalDC)
+DCFEM <- as.numeric(DCFEM)
+MarvelFEM <- as.numeric(MarvelFEM)
+totalMarvel <- as.numeric(totalMarvel)
+
+
+DC <- DCFEM / totalDC
+Marvel <- MarvelFEM / totalMarvel
+
+DCString <- "In the DC Universe" 
+DCString2 <- "characters are female"
+DCString
+DC
+DCString2
+
+MString <- "In the Marvel Universe" 
+MString2 <- "characters are female"
+MString
+Marvel
+MString2
+
+
+```
+
+```{r}
+##effect size
+
+stdMarvel <- sqrt(1/(totalMarvel-1))
+stdDC <- sqrt(1/(totalDC-1))
+
+varianceMarvel <- 1/(totalMarvel-1)
+varianceDC <- 1/(totalDC-1)
+
+stdpooled <- sqrt((((totalDC-1)*(varianceDC^2))+((totalMarvel-1)*(varianceMarvel^2)))/(totalDC+totalMarvel-2))
+cohen <- (DC-Marvel)/stdpooled
+cohen
+sd(totalMarvel)
+  
+              
+    
+
+
+
+##cohen.d(, DC, Marvel, alpha =.05, std = TRUE)
+```
+
+
+```{r}
+##barchart Marvel
+datafile %>>%
+  select(sex, publisher)%>>%
+  filter(str_detect(publisher, "Marvel")) %>>%
+  count(sex) %>>%
+    (~ amarveltable)
+colnames(amarveltable)[2] <- "number"
+  TABLE <- data.frame(c(amarveltable))
+   e <- ggplot(data = TABLE, aes(x=sex, y=number)) +geom_bar(stat = "identity")
+  e 
+  
+##barchartDC
+datafile %>>%
+  select(sex, publisher)%>>%
+  filter(str_detect(publisher, "DC")) %>>%
+  count(sex) %>>%
+    (~ aDCtable)
+colnames(aDCtable)[2] <- "number"
+  TABLE2 <- data.frame(c(aDCtable))
+   e <- ggplot(data = TABLE2, aes(x=sex, y=number)) +geom_bar(stat = "identity")
+  e 
+```
+
+
+
+
+
+
+
